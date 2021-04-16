@@ -20,25 +20,26 @@ public struct Money {
     func convert(_ convertTo: String) -> Money {
         var usdAmount = 0
         if self.currency == "GBP" {
-            usdAmount = usdAmount / 2
+            usdAmount = self.amount * 2
         } else if self.currency == "EUR" {
-            usdAmount = usdAmount * 3 / 2
+            usdAmount = Int(Double(self.amount) / 1.5)
         } else if self.currency == "CAN" {
-            usdAmount = usdAmount * 5 / 4
+            usdAmount = Int(Double(self.amount) / 1.25)
         } else {
             usdAmount = self.amount
         }
         
         var convertedAmount = 0
         if convertTo == "GBP" {
-            convertedAmount = usdAmount * 2
+            convertedAmount = usdAmount / 2
         } else if convertTo == "EUR" {
-            convertedAmount = usdAmount / 3 * 2
+            convertedAmount = Int(Double(usdAmount) * 1.5)
         } else if convertTo == "CAN" {
-            convertedAmount = usdAmount / 5 * 4
+            convertedAmount = Int(Double(usdAmount) * 1.25)
         } else {
             convertedAmount = usdAmount
         }
+
         return Money(amount: convertedAmount, currency: convertTo)
     }
     
@@ -117,8 +118,20 @@ public class Person {
     var firstName: String
     var lastName: String
     var age: Int
-    var job: Job? = nil
-    var spouse: Person? = nil
+    var job: Job? {
+        didSet{
+            if self.age < 16 {
+                self.job = nil
+          }
+        }
+    }
+    var spouse: Person? {
+        didSet{
+            if self.age < 21 {
+                self.spouse = nil
+          }
+        }
+    }
     
     init(firstName: String, lastName: String, age: Int) {
         self.firstName = firstName
